@@ -1,12 +1,11 @@
 package page;
 
-import com.codeborne.selenide.Selectors;
 import com.codeborne.selenide.SelenideElement;
 import data.DataHelper;
 
 import static com.codeborne.selenide.Selenide.$;
 
-public class LoginPageV2 {
+public class LoginPage {
     private final SelenideElement loginFinal = $("[data-test-id=login] input");
     private final SelenideElement passwordFinal = $("[data-test-id=password] input");
     private final SelenideElement loginButton = $("[data-test-id=action-login]");

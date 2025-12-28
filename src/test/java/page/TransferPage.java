@@ -2,27 +2,38 @@ package page;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
+import data.DataHelper;
 
+import java.time.Duration;
+
+import static com.codeborne.selenide.Condition.visible;
+import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.$;
+
 public class TransferPage {
-    private final SelenideElement amount = $("[data-test-id='amount'].input__control");
-    private final SelenideElement fromCard = $("[data-test-id='from'] input");
-    private final SelenideElement transferButton = $("[data-test-id='action-deposit']");
+    private final SelenideElement transferButton = $("[data-test-id='action-transfer']");
+    private final SelenideElement amountInput = $("[data-test-id='amount'] input");
+    private final SelenideElement fromInput = $("[data-test-id='from'] input");
+    private final SelenideElement transferHead = $(byText("Пополнение карты"));
+    private final SelenideElement errorMessage = $("[data-test-id=error-notificator].notificator__content");
 
 
     public TransferPage() {
-        transferButton.should(Condition.visible);
+        transferHead.shouldBe(visible);
     }
 
-    public void setAmount() {
-        amount.shouldBe(Condition.interactable).setValue("5000");
+    public DashboardPage makeValidTransfer(String amountToTransfer, DataHelper.CardInfo cardInfo) {
+        makeTransfer(amountToTransfer, cardInfo);
+        return new DashboardPage();
     }
 
-    public void clickTransferButton() {
+    public void makeTransfer(String amountToTransfer, DataHelper.CardInfo cardInfo) {
+        amountInput.setValue(amountToTransfer);
+        fromInput.setValue(cardInfo.getCardNumber());
         transferButton.click();
     }
 
-    public void setFromCard(String cardNumber) {
-        fromCard.shouldBe(Condition.interactable).setValue(cardNumber);
+    public void findErrorMessage(String expectedText) {
+        errorMessage.should(visible, Duration.ofSeconds(15)).should(Condition.text(expectedText));
     }
 }
